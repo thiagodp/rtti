@@ -10,7 +10,6 @@
 		"issues": "https://github.com/thiagodp/rtti/issues",
 		"source": "https://github.com/thiagodp/rtti"
 	},
-	"minimum-stability": "dev",
 	"require": {
 		"php": ">=5.2.0"
 	},
