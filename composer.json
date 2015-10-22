@@ -1,0 +1,24 @@
+{
+	"name": "phputil/rtti",
+	"type": "library",
+	"description": "A Run-Time Type Information extractor, useful for getting/setting private attributes from/to objects.",
+	"keywords": [ "rtti", "run-time", "private", "protected", "php" ],
+	"homepage": "http://github.com/thiagodp/rtti",
+	"license": "LGPL-3",
+	"authors": [ { "name": "Thiago Delgado Pinto" } ],
+	"support": {
+		"issues": "https://github.com/thiagodp/rtti/issues",
+		"source": "https://github.com/thiagodp/rtti"
+	},
+	"minimum-stability": "dev",
+	"require": {
+		"php": ">=5.2.0"
+	},
+	"require-dev": {
+    },	
+	"suggest": {
+	},
+	"autoload": {
+		"classmap": [ "lib/" ]
+	}
+}
