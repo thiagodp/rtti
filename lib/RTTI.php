@@ -5,14 +5,12 @@ namespace phputil;
  * Run time type information utilities.
  *
  * @author	Thiago Delgado Pinto
- * @version	1.0
  */
 class RTTI {
 	
 	const IS_PRIVATE	= \ReflectionProperty::IS_PRIVATE;
 	const IS_PROTECTED	= \ReflectionProperty::IS_PROTECTED;
 	const IS_PUBLIC		= \ReflectionProperty::IS_PUBLIC;
-	
 	
 	/**
 	 * Return all the visibility flags.
@@ -31,7 +29,6 @@ class RTTI {
 	static function anyVisibility() {
 		return self::allFlags();
 	}
-		
 
 	/**
 	 * Retrieve names and values from the attributes of a object, as a map.
@@ -49,7 +46,12 @@ class RTTI {
 	 *
 	 * @return array
 	 */
-	static function getAttributes( $obj, $visibilityFlags = null, $getterPrefix = 'get', $useCamelCase = true ) {
+	static function getAttributes(
+		$obj
+		, $visibilityFlags = null
+		, $getterPrefix = 'get'
+		, $useCamelCase = true
+		) {
 		if ( ! isset( $obj ) ) {
 			return array();
 		}
@@ -65,7 +67,8 @@ class RTTI {
 			foreach ( $properties as $property ) {
 				
 				$attributeName = $property->getName();
-				$methodName = $getterPrefix . ( $useCamelCase ? self::mb_ucfirst( $attributeName ) : $attributeName );
+				$methodName = $getterPrefix .
+					( $useCamelCase ? self::mb_ucfirst( $attributeName ) : $attributeName );
 				
 				if ( $property->isPrivate() || $property->isProtected() ) {
 				
@@ -77,7 +80,7 @@ class RTTI {
 						}
 					}
 					
-				} else { // public
+				} else { // public method
 					
 					try {
 						$attributes[ $attributeName ] = $obj->{ $attributeName };
@@ -88,7 +91,7 @@ class RTTI {
 				
 			}
 			
-			// No properties? -> try to retrieve only public properties
+			// No properties? -> try to retrieve public properties
 			if ( count( $properties ) < 1 ) {
 				$properties = get_object_vars( $obj );
 				foreach ( $properties as $k => $v ) {
@@ -98,10 +101,17 @@ class RTTI {
 			
 			$currentClass = $currentClass->getParentClass();
 		}
-		return $attributes;		
+		
+		// Analyse all internal objects
+		foreach ( $attributes as $key => $value ) {
+			if ( is_object( $value ) ) {
+				$attributes[ $key ] =
+					self::getAttributes( $value, $flags, $getterPrefix, $useCamelCase );
+			}
+		}		
+		
+		return $attributes;
 	}		
-	
-	
 	
 	/**
 	 * Retrieve names and values from the private attributes of a object, as a map.
@@ -115,8 +125,6 @@ class RTTI {
 	static function getPrivateAttributes( $obj, $getterPrefix = 'get', $useCamelCase = true ) {
 		return self::getAttributes( $obj, self::IS_PRIVATE, $getterPrefix, $useCamelCase );
 	}
-	
-	
 	
 	/**
 	 * Set the attribute values of a object.
@@ -135,7 +143,11 @@ class RTTI {
 	 *										camelCase public methods (default true).
 	 */	
 	static function setAttributes(
-		array $map, &$obj, $visibilityFlags = null, $setterPrefix = 'set', $useCamelCase = true
+		array $map
+		, &$obj
+		, $visibilityFlags = null
+		, $setterPrefix = 'set'
+		, $useCamelCase = true
 		) {
 		$flags = null === $visibilityFlags ? self::allFlags() : $visibilityFlags;
 		$reflectionObject = new \ReflectionObject( $obj );
@@ -147,7 +159,8 @@ class RTTI {
 			foreach ( $properties as $property ) {
 				
 				$attributeName = $property->getName();
-				$methodName = $setterPrefix . ( $useCamelCase ? self::mb_ucfirst( $attributeName ) : $attributeName );
+				$methodName = $setterPrefix .
+					( $useCamelCase ? self::mb_ucfirst( $attributeName ) : $attributeName );
 				
 				if ( $property->isPrivate() || $property->isProtected() ) {
 					
@@ -213,6 +226,7 @@ class RTTI {
 		$first = mb_strtoupper( mb_substr( $str, 0, 1 ) );
 		if ( 1 === mb_strlen( $str ) ) { return $first; }
 		return $first . mb_substr( $str, 1 );
-	}	
+	}
+	
 }
 ?>
