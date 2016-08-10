@@ -40,6 +40,7 @@ class RTTI {
 	 *
 	 * @param int		$visibilityFlags 	Filter visibility flags. Can be added.
 	 *										Example: RTTI::IS_PRIVATE | RTTI::IS_PROTECTED
+	 *										Optional, defaults to RTTI::allFlags.
 	 *
 	 * @param string	$getterPrefix		The prefix for getter public methods (defaults to 'get').
 	 *
@@ -48,17 +49,18 @@ class RTTI {
 	 *
 	 * @return array
 	 */
-	static function getAttributes( $obj, $visibilityFlags, $getterPrefix = 'get', $useCamelCase = true ) {
+	static function getAttributes( $obj, $visibilityFlags = null, $getterPrefix = 'get', $useCamelCase = true ) {
 		if ( ! isset( $obj ) ) {
 			return array();
 		}
+		$flags = null === $visibilityFlags ? self::allFlags() : $visibilityFlags;
 		$attributes = array();
 		$reflectionObject = new \ReflectionObject( $obj );
 		$currentClass = new \ReflectionClass( $obj );
 		
 		while ( $currentClass !== false && ! $currentClass->isInterface() ) {	
 		
-			$properties = $currentClass->getProperties( $visibilityFlags );
+			$properties = $currentClass->getProperties( $flags );
 				
 			foreach ( $properties as $property ) {
 				
@@ -125,6 +127,7 @@ class RTTI {
 	 *
 	 * @param int		$visibilityFlags 	Filter visibility flags. Can be added.
 	 * 										Example: RTTI::IS_PRIVATE | RTTI::IS_PROTECTED
+	 * 										Optional, defaults to RTTI::allFlags.
 	 *
 	 * @param string	$setterPrefix		The prefix for setter public methods (defaults to 'set').
 	 *
@@ -132,13 +135,14 @@ class RTTI {
 	 *										camelCase public methods (default true).
 	 */	
 	static function setAttributes(
-		array $map, &$obj, $visibilityFlags, $setterPrefix = 'set', $useCamelCase = true
+		array $map, &$obj, $visibilityFlags = null, $setterPrefix = 'set', $useCamelCase = true
 		) {
+		$flags = null === $visibilityFlags ? self::allFlags() : $visibilityFlags;
 		$reflectionObject = new \ReflectionObject( $obj );
 		$currentClass = new \ReflectionClass( $obj );
 		while ( $currentClass !== false && ! $currentClass->isInterface() ) {
 		
-			$properties = $currentClass->getProperties( $visibilityFlags );
+			$properties = $currentClass->getProperties( $flags );
 				
 			foreach ( $properties as $property ) {
 				
