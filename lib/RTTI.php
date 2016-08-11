@@ -31,26 +31,32 @@ class RTTI {
 	}
 
 	/**
-	 * Retrieve names and values from the attributes of a object, as a map.
-	 * 
-	 * @param object	$obj				The object.
-	 *
-	 * @param int		$visibilityFlags 	Filter visibility flags. Can be added.
-	 *										Example: RTTI::IS_PRIVATE | RTTI::IS_PROTECTED
-	 *										Optional, defaults to RTTI::allFlags.
-	 *
-	 * @param string	$getterPrefix		The prefix for getter public methods (defaults to 'get').
-	 *
-	 * @param bool		$useCamelCase		If true, private and protected attributes will be accessed
-	 * 										by camelCase public methods (default true).
-	 *
-	 * @return array
+	 *  Retrieve names and values from the attributes of a object, as a map.
+	 *  
+	 *  @param object $obj					The object.
+	 *  
+	 *  @param int $visibilityFlags 		Filter visibility flags. Can be added.
+	 *  									Example: RTTI::IS_PRIVATE | RTTI::IS_PROTECTED
+	 *  									Optional, defaults to RTTI::allFlags().
+	 *  
+	 *  @param string $getterPrefix			The prefix for getter public methods.
+	 *  									Default is 'get'.
+	 *  
+	 *  @param bool	$useCamelCase			If true, private and protected attributes will
+	 *  									be accessed by camelCase public methods.
+	 *  									Default is true.
+	 *  
+	 *  @param bool $convertInternalObjects	If true, converts internal objects.
+	 *  									Default is false.
+	 *  
+	 *  @return array
 	 */
 	static function getAttributes(
 		$obj
 		, $visibilityFlags = null
 		, $getterPrefix = 'get'
 		, $useCamelCase = true
+		, $convertInternalObjects = false
 		) {
 		if ( ! isset( $obj ) ) {
 			return array();
@@ -102,13 +108,15 @@ class RTTI {
 			$currentClass = $currentClass->getParentClass();
 		}
 		
-		// Analyse all internal objects
-		foreach ( $attributes as $key => $value ) {
-			if ( is_object( $value ) ) {
-				$attributes[ $key ] =
-					self::getAttributes( $value, $flags, $getterPrefix, $useCamelCase );
+		if ( $convertInternalObjects ) {
+			// Analyse all internal objects
+			foreach ( $attributes as $key => $value ) {
+				if ( is_object( $value ) ) {
+					$attributes[ $key ] =
+						self::getAttributes( $value, $flags, $getterPrefix, $useCamelCase );
+				}
 			}
-		}		
+		}
 		
 		return $attributes;
 	}		
