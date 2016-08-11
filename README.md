@@ -1,8 +1,8 @@
 # RTTI
 
-A Run-Time Type Information extractor, useful for getting/setting private attributes from/to PHP objects.
+A Run-Time Type Information extractor, useful for getting or setting private and protected attributes from/to PHP objects.
 
-Current [version](http://semver.org/): `1.0` (stable, used in production code)
+We use [semantic versioning](http://semver.org/). See [our releases](https://github.com/thiagodp/rtti/releases).
 
 Classes:
 
