@@ -50,6 +50,8 @@ class RTTI {
 	 *  									Default is false.
 	 *  
 	 *  @return array
+	 *
+	 *  @throws ReflectionException
 	 */
 	static function getAttributes(
 		$obj
@@ -84,6 +86,8 @@ class RTTI {
 						if ( $method->isPublic() ) {
 							$attributes[ $attributeName ] = $method->invoke( $obj );
 						}
+					} else { // maybe has a __call magic method
+						$attributes[ $attributeName ] = $obj->{ $methodName }();
 					}
 					
 				} else { // public method
