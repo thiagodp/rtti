@@ -34,3 +34,7 @@ class User {
 var_dump( RTTI::getAttributes( new User( 'Bob' ), RTTI::allFlags() ) );
 ?>
 ```
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/) (c) [Thiago Delgado Pinto](https://github.com/thiagodp)

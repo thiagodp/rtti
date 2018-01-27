@@ -4,7 +4,7 @@
 	"description": "A Run-Time Type Information extractor, useful for getting/setting private attributes from/to PHP objects.",
 	"keywords": [ "rtti", "run-time", "private", "protected", "php" ],
 	"homepage": "http://github.com/thiagodp/rtti",
-	"license": "LGPL-3",
+	"license": "MIT",
 	"authors": [ { "name": "Thiago Delgado Pinto" } ],
 	"support": {
 		"issues": "https://github.com/thiagodp/rtti/issues",
